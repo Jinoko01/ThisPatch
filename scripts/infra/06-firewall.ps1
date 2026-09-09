@@ -1,4 +1,4 @@
-# 디스패치 클러스터 — WSL 인바운드 방화벽 규칙
+﻿# 디스패치 클러스터 — WSL 인바운드 방화벽 규칙
 #
 # 왜 필요한가
 #   WSL2 미러링 모드에서 WSL 의 인바운드는 Hyper-V 방화벽에 걸린다.
@@ -39,21 +39,28 @@ if (-not $isAdmin) {
     exit 1
 }
 
-# 포트 목록 — 이름, 프로토콜, 포트
+# 포트 목록 — 이름, 포트
+#
+# New-NetFirewallHyperVRule 은 LocalPorts 에 쉼표 목록을 받지 않는다.
+# 단일 포트나 범위만 허용된다 (실측: '9864,9866,9867' → "The port is invalid").
+# 그래서 쉼표로 묶고 싶은 것은 규칙을 따로 만든다.
 $rules = @(
-    @{ n = 'ssh';               p = '22' }
-    @{ n = 'hdfs-namenode-rpc'; p = '9000' }
-    @{ n = 'hdfs-namenode-web'; p = '9870' }
-    @{ n = 'hdfs-datanode';     p = '9864,9866,9867' }
-    @{ n = 'yarn-rm';           p = '8030-8033' }
-    @{ n = 'yarn-rm-web';       p = '8088' }
-    @{ n = 'yarn-nm';           p = '8040,8042' }
-    @{ n = 'mr-shuffle';        p = '13562' }
-    @{ n = 'spark-ui';          p = '4040-4060' }
-    @{ n = 'spark-history';     p = '18080' }
+    @{ n = 'ssh';                p = '22' }
+    @{ n = 'hdfs-namenode-rpc';  p = '9000' }
+    @{ n = 'hdfs-namenode-web';  p = '9870' }
+    @{ n = 'hdfs-datanode-http'; p = '9864' }   # 웹 UI
+    @{ n = 'hdfs-datanode-data'; p = '9866' }   # 블록 전송 — 이게 없으면 데이터가 안 흐른다
+    @{ n = 'hdfs-datanode-ipc';  p = '9867' }
+    @{ n = 'yarn-rm';            p = '8030-8033' }
+    @{ n = 'yarn-rm-web';        p = '8088' }
+    @{ n = 'yarn-nm-localizer';  p = '8040' }
+    @{ n = 'yarn-nm-web';        p = '8042' }
+    @{ n = 'mr-shuffle';         p = '13562' }
+    @{ n = 'spark-ui';           p = '4040-4060' }
+    @{ n = 'spark-history';      p = '18080' }
     # spark-defaults.conf 의 driver.port 17177 / driver.blockManager 17210 /
     # blockManager 17240 + port.maxRetries 30
-    @{ n = 'spark-driver';      p = '17177-17270' }
+    @{ n = 'spark-driver';       p = '17177-17270' }
 )
 
 if ($Remove) {
@@ -75,10 +82,12 @@ Write-Host "── WSL 인바운드 규칙 추가 ──────────
 Write-Host "   허용 출처: $Allowed"
 Write-Host ""
 
+$made = 0; $failed = 0
 foreach ($r in $rules) {
     $name = "dispatch-$($r.n)"
     # 멱등하게: 있으면 지우고 다시 만든다
     try { Remove-NetFirewallHyperVRule -Name $name -ErrorAction SilentlyContinue } catch {}
+    try {
     New-NetFirewallHyperVRule `
         -Name            $name `
         -DisplayName     "Dispatch $($r.n) (WSL)" `
@@ -87,8 +96,13 @@ foreach ($r in $rules) {
         -Protocol        TCP `
         -LocalPorts      $r.p `
         -RemoteAddresses $Allowed `
-        -Action          Allow | Out-Null
-    Write-Host ("  {0,-24} TCP {1}" -f $r.n, $r.p)
+        -Action          Allow -ErrorAction Stop | Out-Null
+        Write-Host ("  {0,-24} TCP {1}" -f $r.n, $r.p)
+        $made++
+    } catch {
+        Write-Host ("  {0,-24} TCP {1}   실패: {2}" -f $r.n, $r.p, $_.Exception.Message) -ForegroundColor Red
+        $failed++
+    }
 }
 
 Write-Host ""
@@ -103,4 +117,9 @@ Get-NetFirewallHyperVVMSetting -Name $WSL_VM |
     Select-Object Name, DefaultInboundAction, DefaultOutboundAction |
     Format-Table -AutoSize | Out-String -Width 160 | Write-Host
 
+Write-Host ("규칙 {0}개 생성, {1}개 실패" -f $made, $failed)
+if ($failed -gt 0) {
+    Write-Host "실패한 규칙이 있습니다. 위 오류를 확인하세요." -ForegroundColor Red
+    exit 1
+}
 Write-Host "완료. WSL 재시작 없이 즉시 적용됩니다." -ForegroundColor Green
