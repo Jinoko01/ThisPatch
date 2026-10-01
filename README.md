@@ -4,18 +4,6 @@
 
 <h1 align="center">ThisPatch — 유저의 반응을 다음 패치의 판단 근거로</h1>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React 19" />
-  <img src="https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?logo=springboot&logoColor=white" alt="Spring Boot 3.5" />
-  <img src="https://img.shields.io/badge/Hadoop-3.5-66CCFF?logo=apachehadoop&logoColor=white" alt="Hadoop 3.5" />
-  <img src="https://img.shields.io/badge/Spark-4.2-E25A1C?logo=apachespark&logoColor=white" alt="Spark 4.2" />
-  <img src="https://img.shields.io/badge/PostgreSQL-17_%C2%B7_pgvector-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL 17 and pgvector" />
-  <img src="https://img.shields.io/badge/AI-EmbeddingGemma_%C2%B7_Qwen3.5-7C3AED" alt="EmbeddingGemma and Qwen3.5" />
-</p>
-
-> **추가할 이미지 — `docs/screenshots/00-cover.png`**<br>
-> 서비스 대표 이미지. 랜딩 히어로("유저의 반응을 다음 패치의 판단 근거로")와 반응 추세 차트가 함께 보이는 화면을 담아 주세요.
-
 > Steam 리뷰와 패치 이력을 분산 처리해, 출시 이후 운영 단계의 게임 개발사가 **내 게임의 유저 반응을 진단**하고 **다음 패치를 정할 때 유사 사례를 참고**할 수 있게 하는 게임 운영 진단 플랫폼
 
 **ThisPatch(디스패치)** 는 출시는 했지만 데이터 분석 인력이 없는 중소·인디 개발사가 리뷰를 눈으로 읽는 것 외에는 유저 반응을 볼 방법이 없다는 문제에서 출발했습니다. 다국어 Steam 리뷰와 패치노트를 Hadoop·Spark 클러스터에서 처리하고, 불만이 어디에 있고 어떤 집단에서 부정 반응이 커지는지, 비슷한 장르에서 같은 변경을 한 게임이 어떤 반응을 받았는지를 나란히 보여 줍니다.
@@ -145,69 +133,60 @@ flowchart LR
 
 ### 2. 게임 탐색
 
-> **추가할 스크린샷 — `docs/screenshots/02-game-list.png`**<br>
-> 검색창, 적용된 조건 칩, 정렬, 게임 카드(이미지·게임명·태그·긍정률·최근 패치)가 보이는 화면을 담아 주세요.
->
-> **추가할 스크린샷 — `docs/screenshots/02-game-filter.png`**<br>
-> 장르·개발사·출시연도·리뷰 수 범위를 설정하는 필터 다이얼로그를 담아 주세요.
+<img width="2879" height="1457" alt="image" src="https://github.com/user-attachments/assets/38344d10-f6f6-4fe0-8a44-1597580c9225" />
+
+<img width="1920" height="1080" alt="게임 목록" src="https://github.com/user-attachments/assets/6cddf56a-845d-45de-9bb8-1bb2a825efef" />
+
 
 게임 이름과 다중 필터로 분석할 게임을 찾고, 카드에서 긍정률과 최근 패치를 바로 비교합니다. 관심 있는 게임은 내 게임으로 등록합니다.
 
 ### 3. 반응 추세
 
-> **추가할 GIF — `docs/screenshots/03-reaction-trends.gif`**<br>
-> 일별 리뷰 반응 차트 스크롤 → 패치 마커 선택 → 패치 노트 패널·번역 → AI 구간 요약 표시 순서를 담아 주세요.
+<img width="1920" height="1080" alt="반응추세" src="https://github.com/user-attachments/assets/fc4070cf-22a7-4fdd-bfe9-10c78b213f4a" />
+
 
 수정일 기준 일별 긍정률을 첫 작성·수정 채널로 나누어 보고, 패치 시점과 반응 변화를 한 화면에서 맞춰 봅니다.
 
 ### 4. 플레이타임 · 토픽
 
-> **추가할 스크린샷 — `docs/screenshots/04-playtime-topics.png`**<br>
-> 플레이타임 구간 카드, 토픽 언급률 막대(긍정/부정), AI 대표 반응 요약이 함께 보이는 화면을 담아 주세요.
+<img width="1920" height="1080" alt="플탐" src="https://github.com/user-attachments/assets/1b8fc2e6-c5d5-4d7c-98af-05d4ea19a32b" />
+
 
 플레이타임 구간별로 5개 토픽의 긍정·부정 언급률을 비교해, 어떤 유저 집단에서 어떤 불만이 커지는지 좁혀 갑니다.
 
 ### 5. 리뷰와 언어별 분석
 
-> **추가할 스크린샷 — `docs/screenshots/05-reviews.png`**<br>
-> 최근 대표 리뷰 카드, 토픽 필터, 리뷰 목록과 펼친 리뷰의 번역 결과를 담아 주세요.
->
-> **추가할 스크린샷 — `docs/screenshots/05-language-analysis.png`**<br>
-> 언어별 리뷰 비중·긍정률 행과, 한 언어를 펼쳐 AI 대표 리뷰 요약이 보이는 화면을 담아 주세요.
+<img width="1920" height="1080" alt="리뷰" src="https://github.com/user-attachments/assets/c374a729-b5d8-48e6-9eb1-6b27dbea614f" />
 
 요약에서 끝나지 않고 원문까지 확인할 수 있습니다. 다국어 리뷰는 DeepL로 번역해 읽습니다.
 
 ### 6. 기획안 구조화
 
-> **추가할 GIF — `docs/screenshots/06-plan-structure.gif`**<br>
-> 기획안 입력 → 구조화 중 → 재진술 확인·고유명사 탐지·변경 슬롯 추출 결과 → 슬롯 수정 → 저장 순서를 담아 주세요.
+<img width="1920" height="1080" alt="기획안1" src="https://github.com/user-attachments/assets/01a22f91-fc47-4a3e-9132-9d1a835cf58c" />
+
+<img width="1920" height="1080" alt="기획안2" src="https://github.com/user-attachments/assets/3b5a894b-841d-45b9-aef1-43785bc04d4d" />
 
 AI가 기획안을 변경 슬롯으로 구조화하고, 사용자가 시스템의 이해를 확인·수정한 뒤에만 유사 사례 검색으로 넘어갑니다.
 
 ### 7. 유사 사례 검색과 사례 상세 비교
 
-> **추가할 스크린샷 — `docs/screenshots/07-case-search.png`**<br>
-> 부정 급변·변화 없음·긍정 급변 세 결과군 열과 사례 카드(유사도·공통/차이·긍정률·후속 패치까지)가 보이는 화면을 담아 주세요.
->
-> **추가할 스크린샷 — `docs/screenshots/07-case-detail.png`**<br>
-> 공통점·차이점, 패치노트 원문/번역, 긍정률 변화와 당시 운영 조건 패널이 보이는 사례 상세 화면을 담아 주세요.
+<img width="1920" height="1080" alt="유사 패치 사례" src="https://github.com/user-attachments/assets/9f74e57f-ce10-42ef-ba31-8faff5f1ae1a" />
+
+<img width="1920" height="1080" alt="패치 사례 상세" src="https://github.com/user-attachments/assets/a5a136fd-4428-476a-ad20-73aa62f65ef5" />
+
 
 같은 축의 과거 패치를 결과군별로 나눠 보여 주고, 사례 상세에서 내 기획안과의 공통점·차이점과 당시 반응을 비교합니다.
 
 ### 8. 내 게임 · 기획안 내역 · 마이페이지
 
-> **추가할 스크린샷 — `docs/screenshots/08-plans.png`**<br>
-> 기획안 내역 목록과 상세 패널(입력 원문, 기획안 해석, 대상 게임)을 담아 주세요.
->
-> **추가할 스크린샷 — `docs/screenshots/08-mypage.png`**<br>
-> 닉네임 변경, 비밀번호 변경, 회원 탈퇴 영역이 보이는 마이페이지를 담아 주세요.
+<img width="2879" height="1454" alt="image" src="https://github.com/user-attachments/assets/7a50054a-cf8d-4781-8dc9-64990307da9e" />
+
+<img width="2880" height="2172" alt="image" src="https://github.com/user-attachments/assets/11460381-eaa7-431c-94e0-711c4fe3dfff" />
+
 
 ---
 
 ## 🏗️ 시스템 아키텍처
-
-> **추가할 이미지 — `docs/screenshots/architecture.png`**<br>
-> 노트북 Hadoop 클러스터(마스터·워커 4대·AI 노트북), 서버1(EC2: Nginx·Backend·Redis·PostgreSQL·Jenkins), 서버2A(백업)와 외부 API(Steam, DeepL, GMS)를 포함한 전체 구성도를 넣어 주세요.
 
 ```mermaid
 flowchart LR
