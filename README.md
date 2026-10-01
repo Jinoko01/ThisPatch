@@ -128,8 +128,8 @@ flowchart LR
 
 ### 1. 랜딩
 
-> **추가할 GIF — `docs/screenshots/01-landing.gif`**<br>
-> 히어로 → "패치는 끝났습니다. 그런데, 유저의 마음도 달라졌을까요?" 타이핑 애니메이션과 차트 → 01·02 섹션 스크롤 순서를 담아 주세요.
+<img width="2880" height="1464" alt="랜딩페이지" src="https://github.com/user-attachments/assets/9193eac8-684e-46e0-89fc-b896254740f7" />
+
 
 ### 2. 게임 탐색
 
