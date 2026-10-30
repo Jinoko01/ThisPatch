@@ -60,6 +60,13 @@ test("게임별 초안은 섞이지 않고 브라우저 이동 시 복원된다"
   await expect(page.getByLabel("기획안 본문")).toHaveValue(plan.rawText)
 })
 
+test("새로고침해도 작성 중인 기획안과 구조화 결과가 남아 있다", async ({ page }) => {
+  await structurePlan(page)
+  await page.reload()
+  await expect(page.getByLabel("기획안 본문")).toHaveValue(plan.rawText)
+  await expect(page.getByRole("heading", { name: "변경 슬롯 추출" })).toBeVisible()
+})
+
 test("빈 값과 공백 제출을 막고 기획안은 500자까지 입력된다", async ({ page }) => {
   await page.goto("/games/7/plan")
   const input = page.getByLabel("기획안 본문")
