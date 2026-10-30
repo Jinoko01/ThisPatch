@@ -105,6 +105,16 @@ test("로그아웃 후 보호 화면에 다시 접근할 수 없다", async ({ p
   await expect(page).toHaveURL(/\/login$/)
   await expect(page.getByRole("heading", { name: "내 게임", exact: true })).toBeHidden()
 })
+test("로그아웃하면 작성 중이던 기획안이 다음 로그인에 남지 않는다", async ({ page }) => {
+  page.on("dialog", (dialog) => dialog.accept())
+  await page.goto("/games/7/plan")
+  await page.getByLabel("기획안 본문").fill("이전 계정의 기획안")
+  await page.getByRole("button", { name: "로그아웃" }).click()
+  await expect(page).toHaveURL(/\/login$/)
+  await loginThroughUi(page)
+  await expect(page).toHaveURL(/\/games\/7\/plan$/)
+  await expect(page.getByLabel("기획안 본문")).toHaveValue("")
+})
 test("로그인한 사용자의 홈 접근은 게임 탐색으로 이동한다", async ({ page }) => {
   await page.goto("/")
   await expect(page).toHaveURL(/\/games$/)

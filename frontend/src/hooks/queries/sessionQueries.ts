@@ -1,6 +1,7 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query"
 import { getSession } from "@/api/session"
 import { clearTokens } from "@/lib/tokenStorage"
+import { clearPlanDrafts } from "@/pages/PlanStructure/planDraftStore"
 
 export const sessionKeys = {
   all: ["session"] as const,
@@ -22,6 +23,7 @@ export function useLogout() {
 
   return () => {
     clearTokens()
+    clearPlanDrafts()
     void queryClient.resetQueries({ queryKey: sessionKeys.all })
   }
 }

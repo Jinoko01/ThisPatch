@@ -47,6 +47,11 @@ export function usePlanDraft(gameId: number): PlanDraft {
   return usePlanDraftStore((state) => state.drafts[gameId] ?? EMPTY_DRAFT)
 }
 
+/** 같은 탭에서 다른 계정이 로그인해도 이전 계정의 기획안이 보이지 않도록 로그아웃 시 비운다. */
+export function clearPlanDrafts() {
+  usePlanDraftStore.setState({ drafts: {} })
+}
+
 export function useUpdatePlanDraft(): PlanDraftState["updateDraft"] {
   return usePlanDraftStore((state) => state.updateDraft)
 }
