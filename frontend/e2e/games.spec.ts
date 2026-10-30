@@ -139,6 +139,27 @@ for (const path of ["/games", "/my-games"]) {
     await expect(page.getByRole("link", { name: "목록 게임 1", exact: true })).toHaveCount(1)
     await expect(page.getByRole("link", { name: "다른 게임", exact: true })).toHaveCount(1)
   })
+
+  test(`${path} 새로고침해도 이전에 펼친 게임까지 다시 보여 준다`, async ({ page, api }) => {
+    const firstPage = Array.from({ length: 12 }, (_, index) => ({
+      ...games[0],
+      id: 100 + index,
+      title: `목록 게임 ${index + 1}`,
+    }))
+    const endpoint = path === "/games" ? "/games" : "/members/me/games"
+    api.set(`GET ${endpoint}`, (request) => ({
+      data: new URL(request.url()).searchParams.has("cursor")
+        ? list([games[1]], null, 13)
+        : list(firstPage, "next", 13),
+    }))
+    await page.goto(path)
+    await page.getByRole("link", { name: "목록 게임 12", exact: true }).scrollIntoViewIfNeeded()
+    await page.mouse.wheel(0, 1800)
+    await expect(page.getByRole("link", { name: "다른 게임", exact: true })).toBeVisible()
+
+    await page.reload()
+    await expect(page.getByRole("link", { name: "다른 게임", exact: true })).toHaveCount(1)
+  })
 }
 
 for (const [path, endpoint, heading] of [

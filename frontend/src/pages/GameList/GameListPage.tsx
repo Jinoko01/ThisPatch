@@ -97,7 +97,7 @@ export default function GameListPage() {
   }
   const query = useGameList(filters)
   const search = searchParams.toString()
-  const pages = useBufferedPages(query.data?.pages.length ?? 0, query, search)
+  const pages = useBufferedPages(query.data?.pages.length ?? 0, query, `games?${search}`)
 
   useEffect(() => {
     rememberGamesSearch(search)

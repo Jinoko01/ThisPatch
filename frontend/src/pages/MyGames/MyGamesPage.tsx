@@ -35,7 +35,7 @@ export default function MyGamesPage() {
 
 function MyGameList() {
   const myGames = useMyGameList({})
-  const pages = useBufferedPages(myGames.data?.pages.length ?? 0, myGames, "")
+  const pages = useBufferedPages(myGames.data?.pages.length ?? 0, myGames, "my-games")
   const { isFetchNextPageError, fetchNextPage } = myGames
 
   if (myGames.isPending) return <MyGameGridSkeleton />
